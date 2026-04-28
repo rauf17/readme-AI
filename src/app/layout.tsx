@@ -6,8 +6,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const geistMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: "ReadmeAI - Technical Blueprint",
-  description: "Built with a structural, precision-engineered design language",
+  title: "Smart README | AI Generator",
+  description: "Transform your repository into a compelling story.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
