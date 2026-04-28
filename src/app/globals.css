@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-obsidian: 5 5 5;
+    --bg-surface: 255 255 255; /* Used with opacity /0.03 */
+    --bg-surface-elevated: 28 35 48;
+    --text-primary: 255 255 255;
+    --text-secondary: 161 161 170;
+    --text-muted: 113 113 122;
+    --accent-primary: 59 130 246;
+    --success: 16 185 129;
+    --warning: 245 158 11;
+    --error: 239 68 68;
+    --border-default: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: radial-gradient(circle at top, #111 0%, #050505 100%);
+    @apply text-text-primary font-sans leading-relaxed-body antialiased selection:bg-accent-primary/20 overflow-hidden;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/[0.02] backdrop-blur-2xl border border-white/[0.08] shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] rounded-xl transition-all duration-500;
+  }
+  
+  .digital-vacuum-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+  }
+  
+  .digital-vacuum-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .digital-vacuum-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .digital-vacuum-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+  }
+
+  .lume-wash {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent, rgba(59, 130, 246, 0.03), transparent);
+    z-index: 5;
+    pointer-events: none;
+    animation: sweep 10s ease-in-out infinite;
+  }
+
+  @keyframes sweep {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+  }
+
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1), transparent);
+    z-index: 10;
+    pointer-events: none;
+    animation: scan 4s linear infinite;
+  }
+}
