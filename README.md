@@ -13,6 +13,22 @@ Key highlights include:
 *   **Cinematic Glassmorphism** 🧊: A modern aesthetic that uses frosted glass effects, depth, and transparency to create an immersive and elegant visual experience.
 *   **Blazing Fast Performance** 🚀: Built on Next.js, ensuring a rapid, responsive, and scalable application.
 
+
+* **Blazing Fast Performance** 🚀: Built on Next.js, ensuring a rapid, responsive, and scalable application.
+
+## 📸 Visual Showcase
+
+### 🌌 Cinematic Entry
+<img width="1920" height="856" alt="image" src="https://github.com/user-attachments/assets/6d787e28-c8e6-42b4-9458-63972a94feae" />
+
+**The obsidian-grade entry sequence featuring animated scanning beams and real-time status logs.**
+
+### 🧊 Obsidian Workspace
+<img width="1920" height="859" alt="image" src="https://github.com/user-attachments/assets/99056aa9-42c1-4224-8cad-b2bafcdbd4e3" />
+
+**The floating glassmorphism workspace where repository analysis meets AI storytelling.**
+
+
 ## 🛠️ Tech Stack
 
 `readme-AI` is built with a cutting-edge and robust technology stack:
