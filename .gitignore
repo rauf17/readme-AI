@@ -1,0 +1,26 @@
+node_modules
+.next
+.env*
+.DS_Store
+# Dependency directories
+node_modules/
+
+# Next.js build output (This covers cache, server, static, etc.)
+.next/
+out/
+
+# Environment variables (Already have this, keep it)
+.env*
+
+# IDE / OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output files
+build_output.txt
