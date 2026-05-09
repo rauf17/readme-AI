@@ -25,16 +25,13 @@ Transform any GitHub repository into professional documentation instantly. Smart
 <!-- Add screenshot: splash screen with SMART README scanning animation -->
 <img width="1909" height="854" alt="image" src="https://github.com/user-attachments/assets/a952a6ee-174f-4bc8-823f-03d5177c666b" />
 
-
 ### Main Editor
 <!-- Add screenshot: split editor/render panel with syntax highlighting -->
-<img width="1920" height="866" alt="image" src="https://github.com/user-attachments/assets/c668dd77-06b9-4065-869d-451d3c166d1f" />
-
+<img width="1920" height="878" alt="image" src="https://github.com/user-attachments/assets/9dbcc246-e6af-4a90-b191-55a0e8c863f5" />
 
 ### Generated README
 <!-- Add screenshot: a real generated README in the render panel -->
 <img width="1920" height="866" alt="image" src="https://github.com/user-attachments/assets/06df908c-86f7-4491-bc73-9c3929fbd5d0" />
-
 
 ### Special Instructions
 <!-- Add screenshot: special instructions panel open -->
