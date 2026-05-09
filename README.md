@@ -1,137 +1,137 @@
-# readme-AI ✨: Your AI-Powered README Storyteller
+# 🚀 Smart README — AI README Generator
 
-Transform any GitHub repository into a compelling, engaging story with `readme-AI`. This ultra-modern, AI-powered README generator features an obsidian-grade user interface, real-time repository analysis, and cinematic glassmorphism. Built to bring your projects to life, `readme-AI` leverages the power of Gemini 2.5 Flash and Next.js for a seamless and visually stunning experience.
+Transform any GitHub repository into professional documentation instantly. Smart README analyzes your codebase and generates comprehensive, well-structured READMEs using Google's Gemini AI.
 
-## 🌟 Description
+🔗 **Live Demo:** https://smart-readme.vercel.app
 
-`readme-AI` is designed for developers who want to present their projects with clarity and style. Gone are the days of manually crafting READMEs; simply provide a GitHub repository URL, and let our intelligent system analyze its contents, structure, and technologies to produce a comprehensive, beautifully formatted README.
+---
 
-Key highlights include:
-*   **AI-Powered Content Generation** 🤖: Harnesses Gemini 2.5 Flash to intelligently analyze your repository and generate contextually rich and accurate README content.
-*   **Obsidian-Grade UI/UX** 🌌: Experience a sleek, dark-themed interface with meticulously crafted design elements, prioritizing user experience and visual appeal.
-*   **Real-time Repository Analysis** 📊: Instantly fetches and processes repository data, offering dynamic insights as you generate your README.
-*   **Cinematic Glassmorphism** 🧊: A modern aesthetic that uses frosted glass effects, depth, and transparency to create an immersive and elegant visual experience.
-*   **Blazing Fast Performance** 🚀: Built on Next.js, ensuring a rapid, responsive, and scalable application.
+## ✨ Features
+
+- 🤖 **AI-Powered Generation** — Gemini 2.5 Flash analyzes your repo and writes accurate, detailed documentation
+- 🎨 **Tone Control** — Choose from Professional, Beginner-friendly, Funny, or Corporate styles
+- ✏️ **Special Instructions** — Add custom context like contributor names, university project details, or specific sections
+- 😊 **Emoji Toggle** — Enable or disable emojis with one click to match your project's vibe
+- 🖊️ **Live Editor** — Edit the generated README with syntax highlighting in real-time
+- 👁️ **Instant Preview** — See the rendered markdown beside your editor as you type
+- 💾 **Export Options** — Copy to clipboard or download as a .md file
+- 🌧️ **Obsidian UI** — Cinematic dark theme with animated code rain background
+
+---
+
+## 📸 Screenshots
+
+### Splash Screen
+<!-- Add screenshot: splash screen with SMART README scanning animation -->
+<img width="1909" height="854" alt="image" src="https://github.com/user-attachments/assets/a952a6ee-174f-4bc8-823f-03d5177c666b" />
 
 
-* **Blazing Fast Performance** 🚀: Built on Next.js, ensuring a rapid, responsive, and scalable application.
+### Main Editor
+<!-- Add screenshot: split editor/render panel with syntax highlighting -->
+<img width="1920" height="866" alt="image" src="https://github.com/user-attachments/assets/c668dd77-06b9-4065-869d-451d3c166d1f" />
 
-## 📸 Visual Showcase
 
-### 🌌 Cinematic Entry
-<img width="1920" height="856" alt="image" src="https://github.com/user-attachments/assets/6d787e28-c8e6-42b4-9458-63972a94feae" />
+### Generated README
+<!-- Add screenshot: a real generated README in the render panel -->
+<img width="1920" height="866" alt="image" src="https://github.com/user-attachments/assets/06df908c-86f7-4491-bc73-9c3929fbd5d0" />
 
-**The obsidian-grade entry sequence featuring animated scanning beams and real-time status logs.**
 
-### 🧊 Obsidian Workspace
-<img width="1920" height="859" alt="image" src="https://github.com/user-attachments/assets/99056aa9-42c1-4224-8cad-b2bafcdbd4e3" />
+### Special Instructions
+<!-- Add screenshot: special instructions panel open -->
+<img width="1920" height="860" alt="image" src="https://github.com/user-attachments/assets/893a2ffa-fab0-42aa-ad45-ea27fbba707b" />
 
-**The floating glassmorphism workspace where repository analysis meets AI storytelling.**
 
+
+---
 
 ## 🛠️ Tech Stack
 
-`readme-AI` is built with a cutting-edge and robust technology stack:
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **AI Model:** Google Gemini 2.5 Flash
+- **Analytics:** Vercel Analytics
+- **Deployment:** Vercel
 
-*   **Frontend Framework** ⚛️: Next.js (with React)
-*   **Language** ✍️: TypeScript, JavaScript
-*   **Styling** 🎨: CSS (utilizing Tailwind CSS for utility-first styling)
-*   **AI Model** 🧠: Google Gemini 2.5 Flash API
-*   **Package Manager** 📦: npm / Yarn
+---
 
-## 🚀 Installation
-
-Follow these steps to set up `readme-AI` locally on your machine.
+## ⚙️ Getting Started
 
 ### Prerequisites
+- Node.js (LTS)
+- A Google Gemini API key — get one free at [aistudio.google.com](https://aistudio.google.com)
 
-Before you begin, ensure you have the following installed:
+### Installation
 
-*   **Node.js** (v18.x or higher recommended)
-*   **npm** or **Yarn**
+```bash
+git clone https://github.com/rauf17/smart-readme.git
+cd smart-readme
+npm install
+```
 
-### Steps
+### Environment Setup
 
-1.  **Clone the Repository** 📥
-    ```bash
-    git clone https://github.com/your-username/readme-AI.git
-    cd readme-AI
-    ```
+Create a `.env.local` file:
+GEMINI_API_KEY=your_gemini_api_key_here
 
-2.  **Install Dependencies** 📦
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+### Run Locally
 
-3.  **Configure Environment Variables** 🔑
-    Create a `.env.local` file in the root of the project and add your Gemini API key:
-    ```
-    GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
-    ```
-    You can obtain a Gemini API key from the [Google AI Studio](https://aistudio.google.com/app/apikey).
+```bash
+npm run dev
+```
 
-4.  **Run the Development Server** ▶️
-    ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
-    The application will now be running on `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000)
 
-## 💡 Usage
+---
 
-Once the development server is running, using `readme-AI` is straightforward and intuitive:
+## 🚀 Usage
 
-1.  **Navigate to the Application** 🌐
-    Open your web browser and go to `http://localhost:3000`.
+1. Paste any public GitHub repository URL into the search bar
+2. Select your preferred tone (Professional, Funny, etc.)
+3. Optionally toggle emojis on/off
+4. Add special instructions if needed (contributor names, project context)
+5. Click **Generate**
+6. Edit the result in the live editor
+7. Copy or download your README
 
-2.  **Enter GitHub Repository URL** 🔗
-    You will see an input field on the main page. Paste the full URL of the GitHub repository you wish to generate a README for (e.g., `https://github.com/vercel/next.js`).
+---
 
-3.  **Generate README** ✍️
-    Click the "Generate README" button. The application will then perform real-time analysis of the repository.
+## 📁 Project Structure
 
-4.  **Review and Customize** 📋
-    After generation, the compelling new README will be displayed. You can then copy the markdown content to your clipboard or download it directly.
+```
+smart-readme/
+├── app/
+│   ├── api/generate/    # Gemini API route
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── CodeRain.tsx     # Animated background
+│   ├── Editor.tsx       # Syntax-highlighted editor
+│   └── Toolbar.tsx      # Emoji toggle + instructions
+├── lib/
+│   └── github.ts        # GitHub repo fetcher
+└── public/
+    └── screenshots/     # App screenshots
+```
+---
 
 ## 🤝 Contributing
 
-We warmly welcome contributions from the community to make `readme-AI` even better! ✨
+1. Fork the repo
+2. Create a branch: `git checkout -b feat/your-feature`
+3. Commit: `git commit -m "feat: add your feature"`
+4. Push: `git push origin feat/your-feature`
+5. Open a Pull Request
 
-To contribute:
+---
 
-1.  **Fork the Repository** 🍴
-    Start by forking the `readme-AI` repository to your GitHub account.
+## 📄 License
 
-2.  **Create a New Branch** 🌱
-    Create a new branch for your feature or bug fix:
-    ```bash
-    git checkout -b feature/your-feature-name
-    # Example: git checkout -b feature/add-dark-mode-toggle
-    ```
+MIT License — free to use and modify.
 
-3.  **Implement Your Changes** 💻
-    Make your desired changes or additions to the codebase. Ensure your code adheres to existing style guidelines.
+---
 
-4.  **Test Your Changes** ✅
-    Before submitting, please test your changes thoroughly to ensure they function as expected and do not introduce new issues.
-
-5.  **Commit Your Changes** 📝
-    Write a clear and concise commit message:
-    ```bash
-    git commit -m "feat: Add a new feature"
-    # Example: git commit -m "fix: Resolve issue with API rate limiting"
-    ```
-
-6.  **Push to Your Branch** 📤
-    Push your changes to your forked repository:
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-
-7.  **Open a Pull Request** 🚀
-    Finally, open a Pull Request from your branch to the `main` branch of the original `readme-AI` repository. Provide a detailed description of your changes.
-
-We appreciate your contributions and thank you for helping us enhance `readme-AI`! 🙏
+<div align="center">
+  <p>Built by <a href="https://github.com/rauf17">rauf17</a></p>
+  <p>⭐ Star this repo if it saved you time!</p>
+</div>
