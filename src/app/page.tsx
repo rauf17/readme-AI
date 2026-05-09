@@ -379,15 +379,21 @@ export default function Home() {
             </div>
             
             <div className="flex-1 relative overflow-hidden">
-              <div ref={overlayRef} className="syntax-overlay digital-vacuum-scroll">
+              {/* Highlight div (background) */}
+              <div 
+                ref={overlayRef} 
+                className="syntax-overlay editor-shared-styles digital-vacuum-scroll"
+              >
                 {highlightedMarkdown}
               </div>
+              
+              {/* Input textarea (foreground) */}
               <textarea
                 ref={editorRef}
                 value={markdown}
                 onChange={(e) => setMarkdown(e.target.value)}
                 onScroll={handleEditorScroll}
-                className="absolute inset-0 w-full bg-transparent p-10 font-mono text-[13px] leading-relaxed text-transparent resize-none focus:outline-none digital-vacuum-scroll transition-colors duration-500"
+                className="absolute inset-0 w-full bg-transparent text-transparent resize-none focus:outline-none editor-shared-styles digital-vacuum-scroll z-10"
                 spellCheck="false"
                 style={{
                   caretColor: '#e6edf3',
