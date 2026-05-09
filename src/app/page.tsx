@@ -88,6 +88,8 @@ export default function Home() {
   // New feature states
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
+  const [isToneOpen, setIsToneOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Refs for synced scrolling
   const editorRef = useRef<HTMLTextAreaElement>(null);
@@ -122,6 +124,17 @@ export default function Home() {
       localStorage.setItem("readme-special-instructions", specialInstructions);
     } catch {}
   }, [specialInstructions]);
+
+  // Click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsToneOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const highlightedMarkdown = useMemo(() => highlightMarkdown(markdown), [markdown]);
 
@@ -225,19 +238,59 @@ export default function Home() {
   const hasActiveInstructions = specialInstructions.trim().length > 0;
 
   return (
-    <div className="relative h-screen w-screen bg-[#050505] flex flex-col font-geist-mono overflow-hidden selection:bg-blue-500/20">
+    <div className="relative h-screen w-screen flex flex-col font-geist-mono overflow-hidden selection:bg-blue-500/20 z-[1]" style={{ background: 'transparent' }}>
       <AnimatePresence>
         {showSplash && (
           <LoadingOverlay onComplete={() => setShowSplash(false)} />
         )}
       </AnimatePresence>
 
+      {/* Ambient Orbs */}
+      <div style={{
+        position: 'fixed', top: -100, left: -100,
+        width: 400, height: 400, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(0,188,212,0.07) 0%, transparent 70%)',
+        filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0
+      }} />
+      <div style={{
+        position: 'fixed', bottom: -100, right: -100,
+        width: 500, height: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)',
+        filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0
+      }} />
+
       <CodeRain speedFactor={showSplash ? 0.2 : 1} />
       
       {/* Refined macOS-style Header */}
-      <header className="relative z-40 w-full h-14 bg-black/40 backdrop-blur-lg border-b border-white/5 flex items-center justify-between px-6">
-        <div className="flex items-center gap-4 flex-1">
-          <Sparkles className="w-4 h-4 text-accent-primary/60" />
+      <header 
+        className="relative z-40 w-full h-[48px] border-b flex items-center justify-between px-6"
+        style={{ 
+          background: 'rgba(10, 10, 10, 0.9)',
+          backdropFilter: 'blur(8px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+        }}
+      >
+        <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center group">
+            <div 
+              className="inline-flex items-center justify-center transition-all duration-200 border bg-white/[0.08] hover:bg-cyan-400/12 hover:border-cyan-400/70"
+              style={{
+                width: '30px',
+                height: '30px',
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                borderRadius: '8px',
+                marginRight: '8px'
+              }}
+            >
+              <Sparkles className="w-4 h-4 text-accent-primary/60 transition-colors group-hover:text-cyan-400" />
+            </div>
+            <span 
+              className="text-sm font-semibold text-[#e6edf3] tracking-tight"
+              style={{ letterSpacing: '-0.01em' }}
+            >
+              Smart README
+            </span>
+          </div>
           
           <div className="flex-1 max-w-md relative group mx-auto">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -250,7 +303,7 @@ export default function Home() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Search or enter GitHub URL..."
-              className="w-full bg-white/5 border border-white/5 rounded-lg pl-8 pr-4 py-1.5 text-xs text-text-primary focus:outline-none focus:border-white/10 focus:bg-white/10 transition-all placeholder:text-text-muted/30 font-mono"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-md pl-8 pr-4 py-1.5 text-[13px] text-[#e6edf3] focus:outline-none focus:border-cyan-400/40 focus:bg-white/[0.05] focus:ring-4 focus:ring-cyan-400/5 transition-all placeholder:text-white/20 font-sans"
             />
             {isLoading && (
               <div className="absolute inset-y-0 right-3 flex items-center">
@@ -261,18 +314,49 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4 flex-1 justify-end">
-          <div className="relative group">
-            <select
-              value={tone}
-              onChange={(e) => setTone(e.target.value)}
-              className="appearance-none bg-white/5 border border-white/5 text-[11px] text-text-muted rounded-full px-4 py-1.5 pr-8 focus:outline-none cursor-pointer hover:bg-white/10 hover:text-text-primary transition-all font-medium"
+          <div className="relative z-[9999]" ref={dropdownRef}>
+            <button
+              onClick={() => setIsToneOpen(!isToneOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-[13px] text-[#e6edf3] border border-white/10 bg-white/[0.04] hover:border-cyan-400/30 transition-all"
             >
-              <option value="Professional" className="bg-[#111] text-white">Professional</option>
-              <option value="Beginner-friendly" className="bg-[#111] text-white">Beginner-friendly</option>
-              <option value="Funny" className="bg-[#111] text-white">Funny</option>
-              <option value="Corporate" className="bg-[#111] text-white">Corporate</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-text-muted pointer-events-none group-hover:text-text-primary transition-colors" />
+              <span>{tone}</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white/30 transition-transform duration-200 ${isToneOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isToneOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 0, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute right-0 w-48 bg-[#161b22] shadow-[0_8px_32px_rgba(0,0,0,0.4)] p-1 z-[9999] backdrop-blur-xl"
+                  style={{
+                    top: '100%',
+                    marginTop: '2px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '0 0 8px 8px'
+                  }}
+                >
+                  {["Professional", "Beginner-friendly", "Funny", "Corporate"].map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setTone(option);
+                        setIsToneOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2 rounded-md text-[13px] transition-all duration-150 ${
+                        tone === option 
+                          ? "text-cyan-400 bg-cyan-400/10" 
+                          : "text-[#e6edf3] hover:bg-cyan-400/10 hover:text-cyan-400"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="generate-btn-wrapper" title={hasActiveInstructions ? "Custom instructions active" : undefined}>
@@ -370,8 +454,8 @@ export default function Home() {
             
             {isLoading && <div className="scan-line" />}
             
-            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(48, 54, 61, 0.7)' }}>
-              <span className="text-[10px] tracking-[0.3em] text-white/30 uppercase font-bold">EDITOR</span>
+            <div className="px-6 h-[36px] border-b flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(255, 255, 255, 0.05)' }}>
+              <span className="text-[10px] tracking-[0.12em] text-white/30 uppercase font-bold">EDITOR</span>
               <div className="flex gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-white/5" />
                 <div className="w-1.5 h-1.5 rounded-full bg-white/5" />
@@ -420,8 +504,8 @@ export default function Home() {
             <div className="lume-wash" />
             <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
-            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(48, 54, 61, 0.7)' }}>
-              <span className="text-[10px] tracking-[0.3em] text-white/30 uppercase font-bold">RENDER</span>
+            <div className="px-6 h-[36px] border-b flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(255, 255, 255, 0.05)' }}>
+              <span className="text-[10px] tracking-[0.12em] text-white/30 uppercase font-bold">RENDER</span>
               
               <div className="flex items-center gap-4">
                 <button 
@@ -440,14 +524,14 @@ export default function Home() {
             <div 
               ref={previewRef}
               onScroll={handlePreviewScroll}
-              className="flex-1 p-12 overflow-y-auto digital-vacuum-scroll"
+              className="flex-1 p-[32px_40px] overflow-y-auto digital-vacuum-scroll"
             >
               <div className="max-w-2xl mx-auto">
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{
                     h1: ({node, ...props}) => (
-                      <h1 className="text-3xl font-light mt-10 mb-8 tracking-tight text-[#e6edf3] border-b border-white/5 pb-2" style={{ borderBottomColor: 'rgba(48,54,61,0.6)' }} {...props} />
+                      <h1 className="text-[26px] font-bold mt-0 mb-3 tracking-tight text-[#e6edf3] border-b border-white/5 pb-2" style={{ borderBottomColor: 'rgba(255,255,255,0.08)' }} {...props} />
                     ),
                     h2: ({node, ...props}) => <h2 className="text-xl font-medium mt-10 mb-4 pb-2 text-[#79c0ff]" {...props} />,
                     h3: ({node, ...props}) => <h3 className="text-lg font-medium mt-8 mb-3 text-[#79c0ff]" {...props} />,
