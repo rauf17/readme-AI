@@ -22,11 +22,42 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const [showToast, setShowToast] = useState(false);
 
+  // New feature states
+  const [specialInstructions, setSpecialInstructions] = useState("");
+  const [showInstructions, setShowInstructions] = useState(false);
+
   // Refs for synced scrolling
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const isSyncingLeft = useRef(false);
   const isSyncingRight = useRef(false);
+
+  // ── localStorage persistence ──
+  useEffect(() => {
+    try {
+      const savedEmoji = localStorage.getItem("readme-emoji-pref");
+      if (savedEmoji !== null) {
+        setIncludeEmojis(savedEmoji === "true");
+      }
+      const savedInstructions = localStorage.getItem("readme-special-instructions");
+      if (savedInstructions) {
+        setSpecialInstructions(savedInstructions);
+        setShowInstructions(true); // re-open panel if content exists
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("readme-emoji-pref", String(includeEmojis));
+    } catch {}
+  }, [includeEmojis]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("readme-special-instructions", specialInstructions);
+    } catch {}
+  }, [specialInstructions]);
 
   const handleEditorScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
     if (!previewRef.current) return;
@@ -67,6 +98,11 @@ export default function Home() {
       return;
     }
 
+    // Vercel Analytics tracking
+    try { (window as any).va?.track?.('emoji_toggle', { enabled: includeEmojis }); } catch {}
+    try { (window as any).va?.track?.('special_instructions_used', { length: specialInstructions.length }); } catch {}
+    try { (window as any).va?.track?.('readme_generated', { hasInstructions: !!specialInstructions }); } catch {}
+
     setIsLoading(true);
     setMarkdown("Fetching repository data from GitHub...");
     setRepoStats(null);
@@ -93,7 +129,12 @@ export default function Home() {
       const generateRes = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repoData, tone, includeEmojis }),
+        body: JSON.stringify({
+          repoData,
+          tone,
+          includeEmojis,
+          specialInstructions: specialInstructions.trim() || undefined,
+        }),
       });
 
       const generateData = await generateRes.json();
@@ -109,6 +150,8 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  const hasActiveInstructions = specialInstructions.trim().length > 0;
 
   return (
     <div className="relative h-screen w-screen bg-[#050505] flex flex-col font-geist-mono overflow-hidden selection:bg-blue-500/20">
@@ -161,13 +204,16 @@ export default function Home() {
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-text-muted pointer-events-none group-hover:text-text-primary transition-colors" />
           </div>
 
-          <button 
-            onClick={handleGenerate}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-1.5 bg-accent-primary/10 border border-accent-primary/20 rounded-full text-[11px] font-medium text-accent-primary hover:bg-accent-primary/20 transition-all active:scale-95"
-          >
-            Generate
-          </button>
+          <div className="generate-btn-wrapper" title={hasActiveInstructions ? "Custom instructions active" : undefined}>
+            <button 
+              onClick={handleGenerate}
+              disabled={isLoading}
+              className="flex items-center gap-2 px-4 py-1.5 bg-accent-primary/10 border border-accent-primary/20 rounded-full text-[11px] font-medium text-accent-primary hover:bg-accent-primary/20 transition-all active:scale-95"
+            >
+              Generate
+            </button>
+            {hasActiveInstructions && <span className="generate-dot" />}
+          </div>
         </div>
 
         {repoStats && (
@@ -176,6 +222,64 @@ export default function Home() {
           </div>
         )}
       </header>
+
+      {/* ── Toolbar Row ── */}
+      {!showSplash && (
+        <>
+          <div className="toolbar-row">
+            {/* Left: Emoji Toggle */}
+            <div className="flex items-center gap-3">
+              <span className={`pill-toggle-label ${includeEmojis ? 'active' : ''}`}>
+                <span className="emoji-sparkle">✨</span>
+                Emojis
+              </span>
+              <button
+                type="button"
+                className={`pill-toggle ${includeEmojis ? 'active' : ''}`}
+                onClick={() => setIncludeEmojis(!includeEmojis)}
+                aria-label="Toggle emojis"
+              >
+                <div className="pill-toggle-dot" />
+              </button>
+            </div>
+
+            {/* Separator */}
+            <div className="toolbar-separator" />
+
+            {/* Right: Special Instructions Trigger */}
+            <button
+              type="button"
+              className={`instructions-trigger ${showInstructions ? 'open' : ''}`}
+              onClick={() => setShowInstructions(!showInstructions)}
+            >
+              <span>⚙ Special Instructions</span>
+              <svg className="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+          </div>
+
+          {/* ── Collapsible Instructions Panel ── */}
+          <div className={`instructions-panel ${showInstructions ? 'open' : ''}`}>
+            <div className="instructions-panel-inner">
+              <textarea
+                className="glass-textarea"
+                value={specialInstructions}
+                onChange={(e) => {
+                  if (e.target.value.length <= 300) {
+                    setSpecialInstructions(e.target.value);
+                  }
+                }}
+                maxLength={300}
+                placeholder="e.g. Add contributor: Muhammad Umair  ·  University project CS401  ·  Include Windows 11 setup  ·  Add Arabic translation section"
+              />
+              <div className={`char-counter ${specialInstructions.length > 250 ? 'near-limit' : ''}`}>
+                {specialInstructions.length}/300
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Main Workspace Overhaul */}
       {!showSplash && (

@@ -81,4 +81,204 @@
     pointer-events: none;
     animation: scan 4s linear infinite;
   }
+
+  /* ── Toolbar Row ── */
+  .toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    border-bottom: 1px solid #2a2a2a;
+    background: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(12px);
+    position: relative;
+    z-index: 40;
+  }
+
+  /* ── Emoji Pill Toggle ── */
+  .pill-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 9999px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .pill-toggle.active {
+    background: rgba(0, 188, 212, 0.2);
+    border-color: rgba(0, 188, 212, 0.4);
+  }
+
+  .pill-toggle-dot {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #555;
+    transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .pill-toggle.active .pill-toggle-dot {
+    left: 23px;
+    background: #00bcd4;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
+  }
+
+  .pill-toggle-label {
+    font-size: 13px;
+    color: #a0a0a0;
+    transition: color 200ms ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .pill-toggle-label.active {
+    color: #e0e0e0;
+  }
+
+  .pill-toggle-label .emoji-sparkle {
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 200ms ease;
+    width: 0;
+    margin-right: 0;
+    overflow: hidden;
+  }
+
+  .pill-toggle-label.active .emoji-sparkle {
+    opacity: 1;
+    transform: scale(1);
+    width: auto;
+    margin-right: 2px;
+  }
+
+  /* ── Special Instructions Trigger ── */
+  .instructions-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #a0a0a0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 200ms ease;
+    font-family: inherit;
+  }
+
+  .instructions-trigger:hover {
+    color: #e0e0e0;
+  }
+
+  .instructions-trigger .chevron-icon {
+    width: 14px;
+    height: 14px;
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+
+  .instructions-trigger.open .chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  /* ── Collapsible Instructions Panel ── */
+  .instructions-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid transparent;
+    position: relative;
+    z-index: 39;
+  }
+
+  .instructions-panel.open {
+    max-height: 120px;
+    border-bottom-color: #2a2a2a;
+  }
+
+  .instructions-panel-inner {
+    padding: 12px 24px;
+  }
+
+  /* ── Glassmorphism Textarea ── */
+  .glass-textarea {
+    width: 100%;
+    max-width: 560px;
+    height: 72px;
+    resize: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #e0e0e0;
+    outline: none;
+    transition: all 200ms ease;
+  }
+
+  .glass-textarea::placeholder {
+    color: #444;
+  }
+
+  .glass-textarea:focus {
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.08),
+      inset 0 0 20px rgba(0, 188, 212, 0.02);
+  }
+
+  /* ── Character Counter ── */
+  .char-counter {
+    text-align: right;
+    font-size: 11px;
+    color: #555;
+    margin-top: 4px;
+    transition: color 200ms ease;
+  }
+
+  .char-counter.near-limit {
+    color: #00bcd4;
+  }
+
+  /* ── Generate Button Dot Indicator ── */
+  .generate-btn-wrapper {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .generate-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00bcd4;
+    box-shadow: 0 0 4px rgba(0, 188, 212, 0.6);
+    pointer-events: none;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; box-shadow: 0 0 6px rgba(0, 188, 212, 0.7); }
+  }
+
+  /* ── Toolbar Separator ── */
+  .toolbar-separator {
+    width: 1px;
+    height: 16px;
+    background: #2a2a2a;
+    flex-shrink: 0;
+  }
 }

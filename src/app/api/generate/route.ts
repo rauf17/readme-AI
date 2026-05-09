@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { repoData, tone, includeEmojis } = await request.json();
+    const { repoData, tone, includeEmojis, specialInstructions } = await request.json();
 
     if (!repoData) {
       return NextResponse.json({ error: 'Repository data is required' }, { status: 400 });
@@ -31,7 +31,7 @@ The README MUST include the following sections:
 - Usage
 - Contributing
 
-Only output the raw markdown. Do not include markdown code block backticks surrounding the entire output.`;
+Only output the raw markdown. Do not include markdown code block backticks surrounding the entire output.${specialInstructions ? `\n\nSpecial instructions from the user (follow precisely): ${specialInstructions}` : ''}`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
