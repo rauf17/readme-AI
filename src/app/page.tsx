@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,6 +9,69 @@ import Toast from "@/components/Toast";
 import OdometerStats from "@/components/OdometerStats";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { Download, Settings2, Sparkles, Send, ChevronDown } from "lucide-react";
+
+// ── Syntax highlighting logic ──
+function highlightMarkdown(text: string): React.ReactNode[] {
+  return text.split('\n').map((line, i) => {
+    let content: React.ReactNode = line;
+
+    if (line.startsWith('# ')) {
+      content = <span className="syn-h1">{line}</span>;
+    } else if (line.startsWith('## ')) {
+      content = <span className="syn-h2">{line}</span>;
+    } else if (line.startsWith('### ')) {
+      content = <span className="syn-h3">{line}</span>;
+    } else if (line.startsWith('- ') || line.startsWith('* ')) {
+      content = <span className="syn-list">{line}</span>;
+    } else if (line.startsWith('> ')) {
+      content = <span className="syn-blockquote">{line}</span>;
+    } else if (line.startsWith('```')) {
+      content = <span className="syn-code">{line}</span>;
+    } else {
+      // Inline patterns
+      const parts: React.ReactNode[] = [];
+      let remaining = line;
+      let key = 0;
+
+      while (remaining.length > 0) {
+        // Simple regex-like matching for bold and inline code
+        const boldMatch = remaining.match(/^(.*?)\*\*(.+?)\*\*(.*)/);
+        const codeMatch = remaining.match(/^(.*?)`([^`]+)`(.*)/);
+
+        let firstMatch: { type: 'bold' | 'code'; index: number; match: RegExpMatchArray } | null = null;
+
+        if (boldMatch) {
+          firstMatch = { type: 'bold', index: boldMatch[1].length, match: boldMatch };
+        }
+        if (codeMatch && (!firstMatch || codeMatch[1].length < firstMatch.index)) {
+          firstMatch = { type: 'code', index: codeMatch[1].length, match: codeMatch };
+        }
+
+        if (firstMatch) {
+          const m = firstMatch.match;
+          if (m[1]) parts.push(<span key={key++} className="syn-text">{m[1]}</span>);
+          if (firstMatch.type === 'bold') {
+            parts.push(<span key={key++} className="syn-bold">**{m[2]}**</span>);
+          } else {
+            parts.push(<span key={key++} className="syn-code">`{m[2]}`</span>);
+          }
+          remaining = m[3];
+        } else {
+          parts.push(<span key={key++} className="syn-text">{remaining}</span>);
+          remaining = '';
+        }
+      }
+      content = <>{parts}</>;
+    }
+
+    return (
+      <div key={i}>
+        {content}
+        {'\n'}
+      </div>
+    );
+  });
+}
 
 export default function Home() {
   const [markdown, setMarkdown] = useState("# Project Title\n\nWrite a brilliant README here...\n\n## Features\n\n- Beautiful design\n- Intelligent tone matching\n- Easy to use");
@@ -29,6 +92,7 @@ export default function Home() {
   // Refs for synced scrolling
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const isSyncingLeft = useRef(false);
   const isSyncingRight = useRef(false);
 
@@ -59,7 +123,14 @@ export default function Home() {
     } catch {}
   }, [specialInstructions]);
 
+  const highlightedMarkdown = useMemo(() => highlightMarkdown(markdown), [markdown]);
+
   const handleEditorScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    // Sync overlay
+    if (overlayRef.current) {
+      overlayRef.current.scrollTop = e.currentTarget.scrollTop;
+      overlayRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
     if (!previewRef.current) return;
     if (isSyncingLeft.current) {
       isSyncingLeft.current = false;
@@ -208,7 +279,8 @@ export default function Home() {
             <button 
               onClick={handleGenerate}
               disabled={isLoading}
-              className="flex items-center gap-2 px-4 py-1.5 bg-accent-primary/10 border border-accent-primary/20 rounded-full text-[11px] font-medium text-accent-primary hover:bg-accent-primary/20 transition-all active:scale-95"
+              className="flex items-center gap-2 px-6 py-1.5 rounded-full text-[11px] font-semibold text-white transition-all active:scale-95 shadow-[0_2px_8px_rgba(0,188,212,0.25)] hover:opacity-90 hover:shadow-[0_4px_16px_rgba(0,188,212,0.3)]"
+              style={{ background: 'linear-gradient(135deg, #00bcd4 0%, #7c3aed 100%)' }}
             >
               Generate
             </button>
@@ -298,7 +370,7 @@ export default function Home() {
             
             {isLoading && <div className="scan-line" />}
             
-            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(48, 54, 61, 0.7)' }}>
               <span className="text-[10px] tracking-[0.3em] text-white/30 uppercase font-bold">EDITOR</span>
               <div className="flex gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-white/5" />
@@ -306,17 +378,23 @@ export default function Home() {
               </div>
             </div>
             
-            <textarea
-              ref={editorRef}
-              value={markdown}
-              onChange={(e) => setMarkdown(e.target.value)}
-              onScroll={handleEditorScroll}
-              className="flex-1 w-full bg-transparent p-10 font-mono text-[13px] leading-relaxed text-[#94A3B8] resize-none focus:outline-none digital-vacuum-scroll transition-colors duration-500 hover:text-[#CBD5E1]"
-              spellCheck="false"
-              style={{
-                scrollbarColor: "rgba(255, 255, 255, 0.03) transparent",
-              }}
-            />
+            <div className="flex-1 relative overflow-hidden">
+              <div ref={overlayRef} className="syntax-overlay digital-vacuum-scroll">
+                {highlightedMarkdown}
+              </div>
+              <textarea
+                ref={editorRef}
+                value={markdown}
+                onChange={(e) => setMarkdown(e.target.value)}
+                onScroll={handleEditorScroll}
+                className="absolute inset-0 w-full bg-transparent p-10 font-mono text-[13px] leading-relaxed text-transparent resize-none focus:outline-none digital-vacuum-scroll transition-colors duration-500"
+                spellCheck="false"
+                style={{
+                  caretColor: '#e6edf3',
+                  scrollbarColor: "rgba(255, 255, 255, 0.03) transparent",
+                }}
+              />
+            </div>
             
             {/* Syntax Metadata */}
             <div className="absolute bottom-6 right-8 flex items-center gap-4 pointer-events-none opacity-40">
@@ -336,7 +414,7 @@ export default function Home() {
             <div className="lume-wash" />
             <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
-            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+            <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between bg-white/[0.01]" style={{ borderBottomColor: 'rgba(48, 54, 61, 0.7)' }}>
               <span className="text-[10px] tracking-[0.3em] text-white/30 uppercase font-bold">RENDER</span>
               
               <div className="flex items-center gap-4">
@@ -363,19 +441,23 @@ export default function Home() {
                   remarkPlugins={[remarkGfm]}
                   components={{
                     h1: ({node, ...props}) => (
-                      <h1 className="text-3xl font-light mt-10 mb-8 tracking-tight bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent" {...props} />
+                      <h1 className="text-3xl font-light mt-10 mb-8 tracking-tight text-[#e6edf3] border-b border-white/5 pb-2" style={{ borderBottomColor: 'rgba(48,54,61,0.6)' }} {...props} />
                     ),
-                    h2: ({node, ...props}) => <h2 className="text-xl font-medium mt-10 mb-4 border-b border-white/5 pb-2 text-teal-400/90" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-lg font-medium mt-8 mb-3 text-pink-400/80" {...props} />,
-                    p: ({node, ...props}) => <p className="text-[#94A3B8] leading-relaxed mb-4" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-2 mb-4 text-[#94A3B8]" {...props} />,
-                    a: ({node, ...props}) => <a className="text-amber-400/80 hover:text-amber-400 transition-colors underline underline-offset-4 decoration-amber-400/30" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-xl font-medium mt-10 mb-4 pb-2 text-[#79c0ff]" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-lg font-medium mt-8 mb-3 text-[#79c0ff]" {...props} />,
+                    p: ({node, ...props}) => <p className="text-[#cdd9e5] leading-relaxed mb-4" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-2 mb-4 text-[#cdd9e5]" {...props} />,
+                    li: ({node, ...props}) => <li className="leading-relaxed mb-1" {...props} />,
+                    a: ({node, ...props}) => <a className="text-[#00bcd4] hover:underline transition-colors" {...props} />,
+                    strong: ({node, ...props}) => <strong className="text-[#ffa657] font-semibold" {...props} />,
+                    hr: ({node, ...props}) => <hr className="my-8 border-t" style={{ borderColor: 'rgba(48,54,61,0.6)' }} {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-left border-l-3 border-[#00bcd4] pl-4 my-4 italic text-[#8b949e]" {...props} />,
                     code: ({node, inline, className, children, ...props}: any) => {
                       return inline ? (
-                        <code className="bg-white/5 text-amber-400 px-1.5 py-0.5 rounded font-mono text-[12px] border border-white/5" {...props}>{children}</code>
+                        <code className="bg-[#6e7681]/15 text-[#ff7b72] px-1.5 py-0.5 rounded font-mono text-[12px]" {...props}>{children}</code>
                       ) : (
-                        <pre className="bg-black/40 p-6 rounded-xl overflow-x-auto my-8 border border-white/5 shadow-inner">
-                          <code className="font-mono text-[12px] text-teal-400/80" {...props}>{children}</code>
+                        <pre className="bg-[#0d1117] p-6 rounded-md overflow-x-auto my-8 border border-white/5 shadow-inner" style={{ borderColor: 'rgba(48,54,61,0.8)' }}>
+                          <code className="font-mono text-[12px] text-[#e6edf3]" {...props}>{children}</code>
                         </pre>
                       )
                     },
