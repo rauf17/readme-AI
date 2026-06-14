@@ -349,4 +349,45 @@
     pointer-events: none;
     z-index: 0;
   }
+
+  /* ─────────────────────────────────────────────────────────────────────────────
+   ADD THESE RULES TO YOUR globals.css
+   They are additive — they won't conflict with your existing styles.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Static syntax overlay (no absolute positioning — used inside scrollable divs) */
+.syntax-overlay-static {
+  font-family: var(--font-geist-mono), 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre;
+  color: rgba(230, 237, 243, 0.15);
+  padding: 8px 0;
+}
+
+/* Profile mode glass panel left sidebar scroll fix */
+.glass-panel {
+  /* already defined — no change needed */
+}
+
+/* Ensure lume-wash still works inside flex children */
+.lume-wash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 0%, rgba(0, 188, 212, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Profile template accent pill */
+.template-accent-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
 }
