@@ -10,7 +10,8 @@ import OdometerStats from "@/components/OdometerStats";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import {
   Download, Settings2, Sparkles, ChevronDown,
-  ArrowRight, User, BookOpen, ChevronLeft, Copy, Check, Globe, MapPin, Mail, Zap
+  ArrowRight, User, BookOpen, ChevronLeft, Copy, Check,
+  Github, Twitter, Linkedin, Globe, MapPin, Mail, Zap
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -967,6 +968,85 @@ export default function Home() {
                 <span className="text-[9px] tracking-[0.15em] text-white/25 uppercase font-bold">EDITOR</span>
                 <div className="flex gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-white/5" /><div className="w-1.5 h-1.5 rounded-full bg-white/5" /></div>
               </div>
+
+              {/* ── Prominent URL hero — shown when no URL entered yet ── */}
+              <AnimatePresence>
+                {!url && !isLoading && (
+                  <motion.div
+                    key="url-hero"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.25 }}
+                    className="absolute inset-0 z-20 flex flex-col items-center justify-center px-8"
+                    style={{ background: 'rgba(8,10,14,0.82)', backdropFilter: 'blur(2px)' }}
+                  >
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6"
+                      style={{ background: 'rgba(0,188,212,0.08)', border: '1px solid rgba(0,188,212,0.2)' }}>
+                      <Sparkles className="w-6 h-6 text-cyan-400" />
+                    </div>
+
+                    {/* Heading */}
+                    <h2 className="text-[22px] font-bold text-[#e6edf3] mb-2 text-center" style={{ letterSpacing: '-0.02em' }}>
+                      Paste a GitHub repo URL
+                    </h2>
+                    <p className="text-[13px] text-white/35 mb-8 text-center max-w-xs leading-relaxed">
+                      AI will read the code and write a complete, accurate README in seconds.
+                    </p>
+
+                    {/* Big input */}
+                    <div className="w-full max-w-md relative">
+                      <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <span className="text-white/20 font-mono text-[13px]">github.com/</span>
+                      </div>
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={e => setUrl(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleGenerate()}
+                        placeholder="user/repository"
+                        autoFocus
+                        className="w-full rounded-xl pl-[108px] pr-14 py-3.5 text-[14px] text-[#e6edf3] font-sans focus:outline-none transition-all placeholder:text-white/20"
+                        style={{
+                          background: 'rgba(255,255,255,0.04)',
+                          border: '1px solid rgba(0,188,212,0.3)',
+                          boxShadow: '0 0 0 3px rgba(0,188,212,0.06)',
+                        }}
+                        onFocus={e => { e.currentTarget.style.borderColor = 'rgba(0,188,212,0.55)'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(0,188,212,0.1)'; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = 'rgba(0,188,212,0.3)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,188,212,0.06)'; }}
+                      />
+                      <button
+                        onClick={handleGenerate}
+                        className="absolute inset-y-0 right-2 my-1.5 px-3 rounded-lg flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
+                        style={{ background: 'linear-gradient(135deg, #00bcd4 0%, #7c3aed 100%)' }}
+                      >
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+
+                    {/* Example URLs */}
+                    <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
+                      <span className="text-[10px] text-white/20 font-mono">try:</span>
+                      {[
+                        'vercel/next.js',
+                        'facebook/react',
+                        'tailwindlabs/tailwindcss',
+                      ].map(example => (
+                        <button
+                          key={example}
+                          onClick={() => setUrl(`https://github.com/${example}`)}
+                          className="text-[10px] font-mono px-2.5 py-1 rounded-full transition-all hover:text-cyan-400"
+                          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.3)' }}
+                        >
+                          {example}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="flex-1 relative overflow-hidden">
                 <div ref={overlayRef} className="syntax-overlay editor-shared-styles digital-vacuum-scroll">{highlightedMarkdown}</div>
                 <textarea ref={editorRef} value={markdown} onChange={e => setMarkdown(e.target.value)} onScroll={handleEditorScroll}
