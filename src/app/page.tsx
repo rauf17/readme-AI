@@ -10,8 +10,7 @@ import OdometerStats from "@/components/OdometerStats";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import {
   Download, Settings2, Sparkles, ChevronDown,
-  ArrowRight, User, BookOpen, ChevronLeft, Copy, Check,
-  Github, Twitter, Linkedin, Globe, MapPin, Mail, Zap
+  ArrowRight, User, BookOpen, ChevronLeft, Copy, Check, Globe, MapPin, Mail, Zap
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
